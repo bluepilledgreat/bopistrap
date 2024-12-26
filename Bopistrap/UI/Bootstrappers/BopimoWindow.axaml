@@ -1,0 +1,236 @@
+<Window
+    x:Class="Bopistrap.UI.Bootstrappers.BopimoWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Bopistrap.UI.ViewModels"
+    Title="BopimoWindow"
+    Width="570"
+    Height="335"
+    x:DataType="vm:BopimoWindowViewModel"
+    Background="Transparent"
+    CanResize="False"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaToDecorationsHint="True"
+    Icon="{Binding Path=Icon, Mode=OneTime}"
+    RequestedThemeVariant="Dark"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Styles>
+        <Style Selector="Button.TitleBar">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="Button.TitleBar:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="RenderTransform" Value="scale(1.1)" />
+        </Style>
+
+        <Style Selector="Button.TitleBar:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="RenderTransform" Value="scale(0.9)" />
+        </Style>
+
+        <Style Selector="ProgressBar.Progress">
+            <Setter Property="Foreground" Value="{Binding Path=ColourPalette.IndicatorBackground, Mode=OneTime}" />
+            <Setter Property="Background" Value="#77222222" />
+            <Setter Property="BorderBrush" Value="{Binding Path=ColourPalette.ProgressBarBorder, Mode=OneTime}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="ProgressBar">
+                    <Border
+                        x:Name="ProgressBarRoot"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        ClipToBounds="True"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <Panel>
+                            <Panel x:Name="DeterminateRoot" Opacity="1">
+                                <Panel.Transitions>
+                                    <Transitions>
+                                        <DoubleTransition Property="Opacity" Duration="0:0:0.197" />
+                                    </Transitions>
+                                </Panel.Transitions>
+                                <Border
+                                    x:Name="PART_Indicator"
+                                    Margin="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Foreground}"
+                                    ClipToBounds="True"
+                                    CornerRadius="6.8">
+                                    <Border x:Name="IndicatorBarberPole" Width="500">
+                                        <Border.Background>
+                                            <DrawingBrush
+                                                DestinationRect="0,0,36,34"
+                                                Stretch="None"
+                                                TileMode="Tile">
+                                                <DrawingBrush.Drawing>
+                                                    <!--  M0,0 18,0 36,34 18,34 Z  -->
+                                                    <GeometryDrawing Brush="{Binding Path=ColourPalette.IndicatorForeground, Mode=OneTime}" Geometry="M0,0 -18,0 -36,34 -18,34 Z" />
+                                                </DrawingBrush.Drawing>
+                                            </DrawingBrush>
+                                        </Border.Background>
+                                    </Border>
+                                </Border>
+                            </Panel>
+                            <Panel x:Name="IndeterminateRoot" Opacity="0">
+                                <Panel.Transitions>
+                                    <Transitions>
+                                        <DoubleTransition Property="Opacity" Duration="0:0:0.197" />
+                                    </Transitions>
+                                </Panel.Transitions>
+                                <Border
+                                    x:Name="IndeterminateProgressBarIndicator"
+                                    Margin="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="{TemplateBinding CornerRadius}" />
+                                <Border
+                                    x:Name="IndeterminateProgressBarIndicator2"
+                                    Margin="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="{TemplateBinding CornerRadius}" />
+                            </Panel>
+                            <LayoutTransformControl
+                                x:Name="PART_LayoutTransformControl"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                IsVisible="{TemplateBinding ShowProgressText}">
+                                <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource StringFormatConverter}">
+                                            <TemplateBinding Property="ProgressTextFormat" />
+                                            <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" />
+                                            <TemplateBinding Property="Percentage" />
+                                            <TemplateBinding Property="Minimum" />
+                                            <TemplateBinding Property="Maximum" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </LayoutTransformControl>
+                        </Panel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="ProgressBar.Progress /template/ Border#IndicatorBarberPole">
+            <Style.Animations>
+                <Animation IterationCount="Infinite" Duration="0:0:1">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="(TranslateTransform.X)" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="(TranslateTransform.X)" Value="36" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </Window.Styles>
+
+    <!--  #141414  -->
+    <Border
+        Background="Black"
+        BorderThickness="2"
+        CornerRadius="10">
+        <Border.Background>
+            <ImageBrush
+                DestinationRect="{Binding Path=BackgroundDestinationRect, Mode=OneWay}"
+                Source="avares://Bopistrap/Resources/Checkers.png"
+                TileMode="Tile" />
+        </Border.Background>
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0%,100%" EndPoint="0%,0%">
+                <GradientStop Offset="0.0" Color="{Binding Path=ColourPalette.WindowBorder.Color, Mode=OneTime}" />
+                <GradientStop Offset="1.0" Color="#141414" />
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+
+        <Grid>
+            <Border CornerRadius="9">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0%,100%" EndPoint="0%,0%">
+                        <GradientStop Offset="0.0" Color="{Binding Path=BackgroundGradientBottom, Mode=OneTime}" />
+                        <GradientStop Offset="1.0" Color="{Binding Path=BackgroundGradientTop, Mode=OneTime}" />
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+
+            <Grid RowDefinitions="40,*">
+                <Grid
+                    x:Name="TitleBar"
+                    Grid.Row="0"
+                    Background="Transparent">
+                    <StackPanel
+                        Height="30"
+                        Margin="5,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,5,0"
+                            Classes="TitleBar"
+                            Click="OnMinimiseClicked"
+                            Cursor="Hand">
+                            <Button.Content>
+                                <Image Source="avares://Bopistrap/Resources/Minimise.png" />
+                            </Button.Content>
+                        </Button>
+
+                        <Button
+                            Height="30"
+                            Classes="TitleBar"
+                            Click="OnCloseClicked"
+                            Cursor="Hand">
+                            <Button.Content>
+                                <Image Source="avares://Bopistrap/Resources/Close.png" />
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.RowSpan="2" Margin="5">
+                    <StackPanel VerticalAlignment="Center">
+                        <Image
+                            x:Name="Logo"
+                            Width="300"
+                            Source="{Binding Path=Logo, Mode=OneTime}" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Margin="0,0,0,2"
+                            HorizontalAlignment="Center"
+                            FontFamily="{StaticResource Quicksand}"
+                            FontSize="18"
+                            Text="{Binding Path=Message, Mode=OneWay}" />
+
+                        <ProgressBar
+                            Height="20"
+                            Margin="50,0"
+                            Classes="Progress"
+                            CornerRadius="8"
+                            Maximum="1"
+                            Opacity="{Binding Path=ProgressBarOpacity, Mode=OneWay}"
+                            Value="{Binding Path=ProgressBarValue, Mode=OneWay}" />
+                    </StackPanel>
+
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        FontFamily="{StaticResource Quicksand}"
+                        Foreground="#C7C7C7"
+                        Text="{Binding Path=GameVersion, Mode=OneWay}" />
+
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        FontFamily="{StaticResource Quicksand}"
+                        Foreground="#C7C7C7"
+                        Opacity="0.1"
+                        Text="{Binding Path=BopistrapVersion, Mode=OneTime}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

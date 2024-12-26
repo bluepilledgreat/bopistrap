@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <Version>1.0.0-dev1</Version>
+    <ApplicationIcon>Resources\Logos\Purple.ico</ApplicationIcon>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <AvaloniaResource Include="Resources\Checkers.png" />
+    <AvaloniaResource Include="Resources\Close.png" />
+    <AvaloniaResource Include="Resources\Logos\Green.ico" />
+    <AvaloniaResource Include="Resources\Logos\Green.png" />
+    <AvaloniaResource Include="Resources\Logos\Purple.ico" />
+    <AvaloniaResource Include="Resources\Logos\Purple.png" />
+    <AvaloniaResource Include="Resources\Logos\Red.ico" />
+    <AvaloniaResource Include="Resources\Logos\Red.png" />
+    <AvaloniaResource Include="Resources\Minimise.png" />
+    <AvaloniaResource Include="Resources\Quicksand.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.1" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.1" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.1">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="FluentAvaloniaUI" Version="2.2.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UI\Controls\" />
+  </ItemGroup>
+</Project>

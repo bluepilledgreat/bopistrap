@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Bopistrap": {
+      "commandName": "Project"
+    },
+    "Bopistrap - Settings": {
+      "commandName": "Project",
+      "commandLineArgs": "-settings"
+    }
+  }
+}
