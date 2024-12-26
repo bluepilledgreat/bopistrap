@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -66,15 +67,9 @@ namespace Bopistrap
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ClientPlatform.Windows : ClientPlatform.Linux;
         }
 
-        private async Task<ClientReleaseResponse> GetLatestClientReleaseInternal()
-        {
-            string response = await Http.Client.GetStringAsync(ClientReleaseApiUrl, _token);
-            return JsonSerializerEx.DeserializeSafe<ClientReleaseResponse>(response);
-        }
-
         private async Task<ClientRelease> GetLatestClientRelease()
         {
-            ClientReleaseResponse response = await GetLatestClientReleaseInternal();
+            ClientReleaseResponse response = await Http.Client.GetFromJsonSafeAsync<ClientReleaseResponse>(ClientReleaseApiUrl, _token);
 
             return new ClientRelease
             {
