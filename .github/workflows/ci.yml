@@ -1,0 +1,30 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release] # add back debug if we need to
+        platform: [win-x64] # add back linux-x64 once we start work on linux support
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x'
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Publish
+      run: dotnet publish -p:PublishSingleFile=true -r ${{ matrix.platform }} -c ${{ matrix.configuration }} --self-contained false ./Bopistrap/Bopistrap.csproj
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Bopistrap (${{ matrix.configuration }}, ${{ matrix.platform }})
+        path: |
+          ./Bopistrap/bin/${{ matrix.configuration }}/net8.0/${{ matrix.platform }}/publish/*
