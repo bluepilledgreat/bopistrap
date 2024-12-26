@@ -33,22 +33,6 @@ namespace Bopistrap
             if (!args.Any()) // dont bother
                 return;
 
-            if (args.Length == 1)
-            {
-                string arg = args[0];
-
-                if (arg.StartsWith("bopimo://"))
-                {
-                    Deeplink = arg;
-                    return;
-                }
-                else if (arg.Length > 2 && arg[1] == ':') // drive
-                {
-                    LevelPath = arg;
-                    return;
-                }
-            }
-
             Dictionary<string, PropertyInfo> flagMap = [];
 
             // build flag map
@@ -70,11 +54,21 @@ namespace Bopistrap
             {
                 string argName = arg;
 
-                if (argName.StartsWith('-'))
-                    argName = argName[1..];
+                if (arg.StartsWith("bopimo://"))
+                {
+                    Deeplink = arg;
+                }
+                else if (arg.Length > 2 && arg[1] == ':')
+                {
+                    LevelPath = arg;
+                }
+                else if (argName.StartsWith('-'))
+                {
+                    argName = argName[1..]; // remove -
 
-                if (flagMap.TryGetValue(argName, out PropertyInfo? prop))
-                    prop.SetValue(this, true);
+                    if (flagMap.TryGetValue(argName, out PropertyInfo? prop))
+                        prop.SetValue(this, true);
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ namespace Bopistrap
 
         public static string Settings { get; }
         public static string Bootstrapper { get; }
+        public static string BootstrapperUpdate { get; }
 
         public static void CreateDirectories()
         {
@@ -28,6 +29,7 @@ namespace Bopistrap
 
             Settings = Path.Combine(Base, "Settings.json");
             Bootstrapper = Path.Combine(Base, "Bopistrap.exe");
+            BootstrapperUpdate = Path.Combine(Base, "Bopistrap.update.exe");
         }
     }
 }

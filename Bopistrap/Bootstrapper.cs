@@ -42,13 +42,18 @@ namespace Bopistrap
         /// </summary>
         public static string Version { get; } = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion;
 
+        public static BopistrapVersion AdvancedVersion { get; } = BopistrapVersion.Parse(Version);
+
         /// <summary>
         /// Path of the executable
         /// </summary>
         public static string ExecutingPath { get; } = Environment.ProcessPath!;
 
         private const string Domain = "bopimo.com";
+        private const string Repository = "bluepilledgreat/bopistrap";
+
         private const string ClientReleaseApiUrl = $"https://www.{Domain}/api/releases/client/latest";
+        private const string GithubReleaseApiUrl = $"https://api.github.com/repos/{Repository}/releases/latest";
 
         private readonly IBootstrapperDialog _dialog;
         private readonly CancellationToken _token;
@@ -135,6 +140,12 @@ namespace Bopistrap
             _dialog.ProgressBarVisible = false;
         }
 
+        private async Task DownloadFile(string url, string filePath)
+        {
+            FileInfo zipInfo = await GetFile(url);
+            await DownloadFile(zipInfo, filePath);
+        }
+
         private void UnpackZip(string zipFilePath, string destinationDirectory)
         {
             FastZipEvents events = new FastZipEvents();
@@ -161,9 +172,73 @@ namespace Bopistrap
             return null;
         }
 
-        private void UpdateBopistrap()
+        private bool IsVersionNewer(string versionStr)
         {
-            // TODO
+            if (!BopistrapVersion.TryParse(versionStr, out BopistrapVersion? version))
+                return true; // we probably did something funny
+
+            return version > AdvancedVersion;
+        }
+
+        private string? GetDownloadUrlFromGithubAssets(GithubAsset[] assets)
+        {
+            foreach (GithubAsset asset in assets)
+            {
+                // TODO: linux support
+                if (asset.FileName.EndsWith(".exe")) // this is for our os
+                    return asset.DownloadUrl;
+            }
+
+            return null;
+        }
+
+        private async Task UpdateBopistrap()
+        {
+            _dialog.Message = "Checking for Bopistrap updates...";
+
+            GithubRelease latestRelease;
+
+            try
+            {
+                latestRelease = await Http.Client.GetFromJsonSafeAsync<GithubRelease>(GithubReleaseApiUrl, _token);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine("Failed to fetch Bopistrap release information");
+                Logger.WriteLine(ex);
+                return;
+            }
+
+            if (!IsVersionNewer(latestRelease.TagName))
+                return;
+
+            string? downloadUrl = GetDownloadUrlFromGithubAssets(latestRelease.Assets);
+            if (downloadUrl == null)
+            {
+                Logger.WriteLine("Failed to get the suitable Bopistrap download url");
+                Logger.WriteLine($"Version: {latestRelease.TagName}");
+                Logger.WriteLine("Files:");
+                foreach (GithubAsset asset in latestRelease.Assets)
+                    Logger.WriteLine(asset.FileName);
+
+                return;
+            }
+
+            _dialog.Message = "Downloading the latest Bopistrap...";
+            await DownloadFile(downloadUrl, Paths.BootstrapperUpdate);
+
+            _dialog.Message = "Updating Bopistrap...";
+
+            using Process process = new Process();
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.WorkingDirectory = Paths.Base;
+            process.StartInfo.FileName = Paths.Bootstrapper;
+            foreach (string arg in Program.Arguments)
+                process.StartInfo.ArgumentList.Add(arg);
+            process.StartInfo.ArgumentList.Add("-upgrade");
+            process.Start();
+
+            Environment.Exit(0);
         }
 
         private async Task UpdateBopimo()
@@ -177,13 +252,11 @@ namespace Bopistrap
             _dialog.Message = "Downloading the Bopimo! Game Client...";
             _dialog.GameVersion = $"v{release.Version}";
 
-            FileInfo zipInfo = await GetFile(release.DownloadUrl);
-
             string tempFilePath = Path.GetTempFileName();
 
             try
             {
-                await DownloadFile(zipInfo, tempFilePath);
+                await DownloadFile(release.DownloadUrl, tempFilePath);
 
                 _dialog.Message = "Unpacking the Bopimo! Game Client...";
 

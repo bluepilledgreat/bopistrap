@@ -18,6 +18,8 @@ namespace Bopistrap
         //public static void Main(string[] args) => BuildAvaloniaApp()
         //    .StartWithClassicDesktopLifetime(args);
 
+        public static string[] Arguments { get; private set; } = null!;
+
         [STAThread]
         public static void Main(string[] args) => BuildAvaloniaApp()
             .Start(AppMain, args);
@@ -81,6 +83,8 @@ namespace Bopistrap
         private static void AppMain(Application app, string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
+            Arguments = args;
 
             Logger.WriteLine($"Bopistrap v{Bootstrapper.Version}");
             LaunchFlags.Default.Parse(args);
