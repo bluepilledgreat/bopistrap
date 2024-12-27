@@ -302,7 +302,7 @@ namespace Bopistrap
 
         public async Task Run()
         {
-            UpdateBopistrap();
+            await UpdateBopistrap();
             await UpdateBopimo();
             StartBopimo();
         }
