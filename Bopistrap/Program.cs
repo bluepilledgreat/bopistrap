@@ -112,10 +112,7 @@ namespace Bopistrap
             }
 
             if (Installer.IsNewerVersion())
-            {
                 Installer.PromptUpgrade();
-                return;
-            }
 
             AppRegistry.UpdateVersionSafe();
 

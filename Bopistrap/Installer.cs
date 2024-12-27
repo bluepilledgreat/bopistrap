@@ -262,6 +262,7 @@ namespace Bopistrap
             if (result == MessageBoxResult.Yes)
             {
                 HandleUpgrade();
+                Environment.Exit(0);
             }
         }
     }
