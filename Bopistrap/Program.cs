@@ -107,13 +107,13 @@ namespace Bopistrap
 
             if (LaunchFlags.Default.Upgrade)
             {
-                Installer.HandleUpgrade([]);
+                Installer.HandleUpgrade();
                 return;
             }
 
             if (Installer.IsNewerVersion())
             {
-                Installer.PromptUpgrade(args);
+                Installer.PromptUpgrade();
                 return;
             }
 

@@ -216,7 +216,7 @@ namespace Bopistrap
             }
         }
 
-        public static void HandleUpgrade(string[] args)
+        public static void HandleUpgrade()
         {
             // not linux compatible atm
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -246,17 +246,22 @@ namespace Bopistrap
             process.StartInfo.UseShellExecute = true;
             process.StartInfo.WorkingDirectory = Paths.Base;
             process.StartInfo.FileName = Paths.Bootstrapper;
-            foreach (string arg in args)
-                process.StartInfo.ArgumentList.Add(arg);
+
+            foreach (string arg in Program.Arguments)
+            {
+                if (arg != "-upgrade")
+                    process.StartInfo.ArgumentList.Add(arg);
+            }
+
             process.Start();
         }
 
-        public static void PromptUpgrade(string[] args)
+        public static void PromptUpgrade()
         {
             var result = Utils.ShowMessageBox("This version of Bopistrap is newer than the version installed. Do you want to upgrade?", MessageBoxButton.YesNo, MessageBoxIcon.Information, quietFallback: MessageBoxResult.Yes);
             if (result == MessageBoxResult.Yes)
             {
-                HandleUpgrade(args);
+                HandleUpgrade();
             }
         }
     }
