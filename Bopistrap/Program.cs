@@ -105,15 +105,15 @@ namespace Bopistrap
                 return;
             }
 
-            if (Installer.IsNewerVersion())
-            {
-                Installer.PromptUpgrade(args);
-                return;
-            }
-
             if (LaunchFlags.Default.Upgrade)
             {
                 Installer.HandleUpgrade([]);
+                return;
+            }
+
+            if (Installer.IsNewerVersion())
+            {
+                Installer.PromptUpgrade(args);
                 return;
             }
 
