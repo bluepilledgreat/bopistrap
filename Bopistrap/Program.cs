@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -81,6 +82,17 @@ namespace Bopistrap
             continueTask.Wait();
         }
 
+        private static void LaunchBase()
+        {
+            using Process process = new Process();
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.WorkingDirectory = Paths.Base;
+            process.StartInfo.FileName = Paths.Bootstrapper;
+            foreach (string arg in Program.Arguments)
+                process.StartInfo.ArgumentList.Add(arg);
+            process.Start();
+        }
+
         private static void AppMain(Application app, string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -115,8 +127,15 @@ namespace Bopistrap
             string? rootExecutingDir = Path.GetDirectoryName(Bootstrapper.ExecutingPath);
 
 #if RELEASE
-            if (Installer.IsNewerVersion() && Paths.Base != rootExecutingDir)
-                Installer.PromptUpgrade();
+            if (Paths.Base != rootExecutingDir)
+            {
+                if (Installer.IsNewerVersion())
+                    Installer.PromptUpgrade();
+
+                // launch the installed bopistrap
+                LaunchBase();
+                return;
+            }
 #endif
 
             if (Paths.Base == rootExecutingDir)
