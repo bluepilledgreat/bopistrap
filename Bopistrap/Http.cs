@@ -9,6 +9,13 @@ namespace Bopistrap
 {
     internal static class Http
     {
-        public static HttpClient Client { get; } = new HttpClient(new HttpClientHandler { AutomaticDecompression = System.Net.DecompressionMethods.All, AllowAutoRedirect = false });
+        private static HttpClient CreateHttpClient()
+        {
+            HttpClient client = new HttpClient(new HttpClientHandler { AutomaticDecompression = System.Net.DecompressionMethods.All, AllowAutoRedirect = false });
+            client.DefaultRequestHeaders.Add("User-Agent", $"Bopistrap/{Bootstrapper.Version}");
+            return client;
+        }
+
+        public static HttpClient Client { get; } = CreateHttpClient();
     }
 }
