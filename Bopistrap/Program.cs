@@ -114,8 +114,10 @@ namespace Bopistrap
 
             string? rootExecutingDir = Path.GetDirectoryName(Bootstrapper.ExecutingPath);
 
+#if RELEASE
             if (Installer.IsNewerVersion() && Paths.Base != rootExecutingDir)
                 Installer.PromptUpgrade();
+#endif
 
             if (Paths.Base == rootExecutingDir)
                 AppRegistry.UpdateVersionSafe();
