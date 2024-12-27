@@ -64,10 +64,10 @@ namespace Bopistrap
             window.Closed += (_, _) => cts.Cancel();
             Task continueTask = task.ContinueWith(x =>
             {
+                cts.Cancel();
+
                 if (x.IsFaulted)
                     throw x.Exception;
-
-                cts.Cancel();
             });
 
             if (!window.IsVisible)
