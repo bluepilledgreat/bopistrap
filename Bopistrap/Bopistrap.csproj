@@ -9,6 +9,7 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <Version>1.0.0-dev1</Version>
     <ApplicationIcon>Resources\Logos\Purple.ico</ApplicationIcon>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
   
   <ItemGroup>
