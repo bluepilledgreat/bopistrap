@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,10 +29,17 @@ namespace Bopistrap
             _writer.WriteLine(message?.ToString());
         }
 
-        public static void WriteLine(object? message)
+        private static string ConstructMessage(object? message, string? filePath, int lineCount)
         {
-            Debug.WriteLine(message);
-            WriteToFile(message);
+            return $"[{DateTime.UtcNow.ToString("O")}] [{Path.GetFileName(filePath)}:{lineCount}] {message}";
+        }
+
+        public static void WriteLine(object? message, [CallerFilePath] string? filePath = null, [CallerLineNumber] int lineNumber = 0)
+        {
+            string printMessage = ConstructMessage(message, filePath, lineNumber);
+
+            Debug.WriteLine(printMessage);
+            WriteToFile(printMessage);
         }
 
         static Logger()
