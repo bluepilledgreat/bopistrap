@@ -117,13 +117,16 @@ namespace Bopistrap
 
         private async Task DownloadFile(FileInfo fileInfo, string filePath)
         {
+            bool showProgressBar = fileInfo.Size != 0;
+
             using var httpStream = fileInfo.Stream;
             using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Write, FileShare.Delete);
 
             byte[] buffer = new byte[4096];
             int downloadedBytes = 0;
 
-            _dialog.ProgressBarVisible = true;
+            if (showProgressBar)
+                _dialog.ProgressBarVisible = true;
 
             while (true)
             {
@@ -134,10 +137,13 @@ namespace Bopistrap
                 downloadedBytes += bytesRead;
 
                 await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), _token);
-                UpdateProgressBar(downloadedBytes, fileInfo.Size);
+
+                if (showProgressBar)
+                    UpdateProgressBar(downloadedBytes, fileInfo.Size);
             }
 
-            _dialog.ProgressBarVisible = false;
+            if (showProgressBar)
+                _dialog.ProgressBarVisible = false;
         }
 
         private async Task DownloadFile(string url, string filePath)
