@@ -11,6 +11,7 @@ namespace Bopistrap
     {
         public static string Base { get; }
         public static string Client { get; }
+        public static string Logs { get; }
 
         public static string Settings { get; }
         public static string Bootstrapper { get; }
@@ -20,12 +21,14 @@ namespace Bopistrap
         {
             Directory.CreateDirectory(Base);
             Directory.CreateDirectory(Client);
+            // Logs is created in Logger::InitialiseWriter
         }
 
         static Paths()
         {
             Base = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bopistrap");
             Client = Path.Combine(Base, "Client");
+            Logs = Path.Combine(Base, "Logs");
 
             Settings = Path.Combine(Base, "Settings.json");
             Bootstrapper = Path.Combine(Base, "Bopistrap.exe");
