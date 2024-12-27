@@ -232,7 +232,7 @@ namespace Bopistrap
             using Process process = new Process();
             process.StartInfo.UseShellExecute = true;
             process.StartInfo.WorkingDirectory = Paths.Base;
-            process.StartInfo.FileName = Paths.Bootstrapper;
+            process.StartInfo.FileName = Paths.BootstrapperUpdate;
             foreach (string arg in Program.Arguments)
                 process.StartInfo.ArgumentList.Add(arg);
             process.StartInfo.ArgumentList.Add("-upgrade");
