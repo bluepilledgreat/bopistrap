@@ -120,7 +120,7 @@ namespace Bopistrap
             bool showProgressBar = fileInfo.Size != 0;
 
             using var httpStream = fileInfo.Stream;
-            using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Write, FileShare.Delete);
+            using var fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Delete);
 
             byte[] buffer = new byte[4096];
             int downloadedBytes = 0;
