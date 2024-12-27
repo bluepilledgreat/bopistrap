@@ -117,6 +117,8 @@ namespace Bopistrap
                 return;
             }
 
+            AppRegistry.UpdateVersionSafe();
+
             // make sure they're registered
             AppRegistry.RegisterClasses();
 

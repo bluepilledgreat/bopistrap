@@ -239,11 +239,7 @@ namespace Bopistrap
             // should be safe now
             File.Move(Bootstrapper.ExecutingPath, Paths.Bootstrapper, true);
 
-            // TODO: do this every launch
-            using (var uninstallKey = Registry.CurrentUser.OpenSubKey(AppRegistry.UninstallKey))
-            {
-                uninstallKey?.SetValue("DisplayVersion", Bootstrapper.Version);
-            }
+            AppRegistry.UpdateVersionSafe();
 
             // we have to relaunch so funny stuff doesn't happen.
             using Process process = new Process();

@@ -86,5 +86,29 @@ namespace Bopistrap
 
             WriteUrlClass("bopimo", Paths.Bootstrapper);
         }
+
+        public static void UpdateVersion()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                throw new NotImplementedException();
+
+            using (var uninstallKey = Registry.CurrentUser.OpenSubKey(UninstallKey))
+            {
+                uninstallKey?.SetValue("DisplayVersion", Bootstrapper.Version);
+            }
+        }
+
+        public static void UpdateVersionSafe()
+        {
+            try
+            {
+                UpdateVersion();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine("Failed to write version to registry");
+                Logger.WriteLine(ex);
+            }
+        }
     }
 }
