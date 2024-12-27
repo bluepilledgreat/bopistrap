@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -111,7 +112,7 @@ namespace Bopistrap
                 return;
             }
 
-            if (Installer.IsNewerVersion())
+            if (Installer.IsNewerVersion() && Path.GetDirectoryName(Bootstrapper.ExecutingPath) != Paths.Base)
                 Installer.PromptUpgrade();
 
             AppRegistry.UpdateVersionSafe();
