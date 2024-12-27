@@ -178,6 +178,11 @@ namespace Bopistrap
             return null;
         }
 
+        private static bool DoGameFilesExist()
+        {
+            return File.Exists(Path.Combine(Paths.Client, "bopimo_client.exe")) && File.Exists(Path.Combine(Paths.Client, "bopimo_client.dll"));
+        }
+
         private bool IsVersionNewer(string versionStr)
         {
             if (!BopistrapVersion.TryParse(versionStr, out BopistrapVersion? version))
@@ -252,7 +257,7 @@ namespace Bopistrap
             _dialog.Message = "Checking for Bopimo! client updates...";
 
             ClientRelease release = await GetLatestClientRelease();
-            if (Settings.Default.State.Version == release.Version)
+            if (Settings.Default.State.Version == release.Version && DoGameFilesExist())
                 return;
 
             _dialog.Message = "Downloading the Bopimo! Game Client...";
