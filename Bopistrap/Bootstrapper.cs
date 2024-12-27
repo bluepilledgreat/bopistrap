@@ -85,7 +85,7 @@ namespace Bopistrap
 
         private async Task<FileInfo> GetFile(string url)
         {
-            HttpResponseMessage response = await Http.Client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, _token);
+            using HttpResponseMessage response = await Http.Client.GetFollowAsync(url, HttpCompletionOption.ResponseHeadersRead, _token);
             response.EnsureSuccessStatusCode();
 
             int size = 0;
