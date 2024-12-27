@@ -112,10 +112,13 @@ namespace Bopistrap
                 return;
             }
 
-            if (Installer.IsNewerVersion() && Path.GetDirectoryName(Bootstrapper.ExecutingPath) != Paths.Base)
+            string? rootExecutingDir = Path.GetDirectoryName(Bootstrapper.ExecutingPath);
+
+            if (Installer.IsNewerVersion() && Paths.Base != rootExecutingDir)
                 Installer.PromptUpgrade();
 
-            AppRegistry.UpdateVersionSafe();
+            if (Paths.Base == rootExecutingDir)
+                AppRegistry.UpdateVersionSafe();
 
             // make sure they're registered
             AppRegistry.RegisterClasses();
